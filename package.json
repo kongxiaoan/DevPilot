@@ -1,0 +1,14 @@
+{
+  "name": "devpilot-mcp",
+  "version": "0.1.0",
+  "description": "MCP provider for generating app architecture (DevPilot)",
+  "bin": {
+    "devpilot-mcp": "bin/mcp-server.js"
+  },
+  "keywords": ["mcp", "scaffold", "architecture", "devpilot"],
+  "author": "kpa",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
