@@ -1,19 +1,31 @@
 #!/usr/bin/env node
-import { spawn } from "child_process";
-import { fileURLToPath } from "url";
-import path from "path";
 
-// 找到 Python 脚本路径
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const scriptPath = path.join(__dirname, "..", "src", "mcp_architecture_generate.py");
+const { spawn } = require('child_process');
+const path = require('path');
 
-// 调用 uv 运行 Python MCP Provider
-const child = spawn("uv", ["run", scriptPath], {
-  stdio: "inherit",
-  shell: true
+// Python 脚本的路径
+const pythonScript = path.join(__dirname, '..', 'src', 'mcp_architecture_generate.py');
+
+// 启动 Python MCP 服务器
+const child = spawn('uv', ['run', pythonScript], {
+  stdio: 'inherit',
+  cwd: path.dirname(pythonScript)
 });
 
-child.on("exit", (code) => {
-  process.exit(code ?? 0);
+child.on('error', (error) => {
+  console.error('Failed to start MCP server:', error);
+  process.exit(1);
+});
+
+child.on('exit', (code) => {
+  process.exit(code);
+});
+
+// 处理进程信号
+process.on('SIGINT', () => {
+  child.kill('SIGINT');
+});
+
+process.on('SIGTERM', () => {
+  child.kill('SIGTERM');
 });
